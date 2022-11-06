@@ -34,7 +34,9 @@ function operation(){
         createAccount()
     } else if(action === 'Depositar'){
         deposit()
+
     }else if(action === 'Consultar Saldo'){
+        getAccountbalance()
 
     }else if(action === 'Sacar'){
 
@@ -182,4 +184,37 @@ function getAccount(accountName) {
         flag: 'r',
     })
     return JSON.parse(accountJSON)
+}
+
+//ver saldo da conta
+
+function getAccountbalance() {
+    inquirer.prompt([
+        {
+            name:'accountName',
+            message: 'Qual é o nome da sua conta?'
+        }
+
+    ]).then((answer) => {
+        
+        const accountName = answer['accountName']
+
+     // validar se a conta existe
+
+        if(!checkAccount(accountName)){
+            return getAccountbalance()
+        }
+
+        const accountData = getAccount(accountName)
+
+        console.log(
+            chalk.bgBlue.black(
+            `Olá, o saldo da sua conta é de R$${accountData.balance}`,
+            ),
+        )
+        operation()
+
+
+    })
+    .catch(err => console.log(err))
 }
